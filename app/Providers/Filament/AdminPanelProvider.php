@@ -42,7 +42,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Input Data',
-                'Manajemen Kelas'
+                'Manajemen Kelas',
+                'Transaksi Bayar',
             ])
             ->middleware([
                 EncryptCookies::class,

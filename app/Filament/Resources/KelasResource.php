@@ -26,13 +26,15 @@ class KelasResource extends Resource
 {
     protected static ?string $model = Kelas::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $pluralModelLabel = 'Data Kelas';
 
     protected static ?string $slug = 'data-kelas';
 
     protected static ?string $navigationGroup = 'Input Data';
+
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
@@ -64,6 +66,7 @@ class KelasResource extends Resource
             ->columns([
                 TextColumn::make('nama_kelas')
                     ->label('Nama Kelas')
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('tingkat_kelas')
                     ->label('Tingkat Kelas'),

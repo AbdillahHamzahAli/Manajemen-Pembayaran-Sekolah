@@ -13,9 +13,9 @@ class Siswa extends Model
     protected $primaryKey = 'nis';
     protected $fillable = ['nis','nama_siswa', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'tanggal_masuk', 'kelas_id'];
 
-    public function kelas()
+    public function anggotaKelas()
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
+        return $this->hasMany(Anggota_Kelas::class, 'siswa_nis', 'nis');
     }
 }
 

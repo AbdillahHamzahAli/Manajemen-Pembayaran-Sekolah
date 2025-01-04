@@ -23,13 +23,15 @@ class TahunAjaranResource extends Resource
 {
     protected static ?string $model = Tahun_Ajaran::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar-date-range';
 
     protected static ?string $pluralModelLabel = 'Tahun Ajaran';
 
     protected static ?string $slug = 'tahun-ajaran';
 
     protected static ?string $navigationGroup = 'Input Data';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

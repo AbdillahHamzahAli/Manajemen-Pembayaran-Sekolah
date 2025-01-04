@@ -22,13 +22,15 @@ class SppResource extends Resource
 {
     protected static ?string $model = Spp::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-document-currency-pound';
 
     protected static ?string $pluralModelLabel = 'SPP';
 
     protected static ?string $slug = 'SPP';
 
     protected static ?string $navigationGroup = 'Input Data';
+
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {

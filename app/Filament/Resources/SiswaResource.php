@@ -24,13 +24,15 @@ class SiswaResource extends Resource
 {
     protected static ?string $model = Siswa::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-plus';
     
     protected static ?string $pluralModelLabel = 'Data Siswa';
 
     protected static ?string $slug = 'data-siswa';
 
     protected static ?string $navigationGroup = 'Input Data';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
