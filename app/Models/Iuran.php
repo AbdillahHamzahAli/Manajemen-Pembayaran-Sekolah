@@ -16,4 +16,9 @@ class Iuran extends Model
     {
         return $this->belongsTo(Tahun_Ajaran::class, 'tahun_ajaran_id', 'id');
     }
+
+    public function transaksiIuran()
+    {
+        return $this->hasMany(Transaksi_Iuran::class, 'iuran_id', 'id');
+    }
 }

@@ -19,6 +19,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Date;
+use Filament\Notifications\Notification;
+
 
 class SiswaResource extends Resource
 {
@@ -96,7 +98,19 @@ class SiswaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->action(function (Siswa $siswa) {
+                        if ($siswa->anggotaKelas()->exists()) {
+                            Notification::make()
+                                ->title('Tidak Dapat Menghapus Data')
+                                ->body('Siswa ini masih terdaftar sebagai anggota kelas.')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+                        $siswa->delete();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

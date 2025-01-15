@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Collection;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 
@@ -74,7 +75,21 @@ class TahunAjaranResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                                foreach ($records as $record) {
+                                    if ($record->kelas()->exists()) {
+                                        Notification::make()
+                                            ->title('Tidak Dapat Menghapus Data')
+                                            ->body('Tahun Ajaran masih memiliki data Kelas.')
+                                            ->danger()
+                                            ->send();
+                                        return;
+                                    }
+                                    $record->delete();
+                            }
+                        }),    
                 ]),
             ]);
     }

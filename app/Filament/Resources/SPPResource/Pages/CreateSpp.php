@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSpp extends CreateRecord
 {
     protected static string $resource = SppResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

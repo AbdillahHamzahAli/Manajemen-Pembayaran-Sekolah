@@ -10,6 +10,8 @@ use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Collection;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -69,11 +71,37 @@ class IuranResource extends Resource
                     ->options(fn () => Tahun_Ajaran::all()->pluck('tahun_ajaran', 'id')->toArray()),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
+                    ->action(function (Iuran $iuran){
+                        if($iuran->transaksiIuran()->exists()){
+                            Notification::make()
+                                ->title('Tidak Dapat Menghapus Data')
+                                ->body('Data sudah digunakan pada Transaksi Iuran')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+                        $iuran->delete();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            foreach ($records as $record) {
+                                if ($record->transaksiIuran()->exists()) {
+                                    Notification::make()
+                                        ->title('Tidak Dapat Menghapus Data')
+                                        ->body('Data sudah digunakan pada Transaksi Iuran')
+                                        ->danger()
+                                        ->send();
+                                    return;
+                                }
+                                $record->delete();
+                            }
+                        }),
                 ]),
             ]);
     }
@@ -90,7 +118,6 @@ class IuranResource extends Resource
         return [
             'index' => Pages\ListIurans::route('/'),
             'create' => Pages\CreateIuran::route('/create'),
-            'edit' => Pages\EditIuran::route('/{record}/edit'),
         ];
     }
 }

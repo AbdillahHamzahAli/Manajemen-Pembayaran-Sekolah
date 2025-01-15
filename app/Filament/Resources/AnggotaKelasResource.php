@@ -39,25 +39,30 @@ class AnggotaKelasResource extends Resource
     {
         return $form
             ->schema([
+                Select::make('tahun_ajaran_id')
+                    ->label('Tahun Ajaran')
+                    ->options(Tahun_Ajaran::pluck('tahun_ajaran', 'id'))
+                    ->searchable()
+                    ->dehydrated()
+                    ->required(),
+
+
                 Select::make('kelas_id')
                     ->label('Kelas')
-                    ->options(Kelas::all()->sortBy(function ($kelas) {
-                        $tahunAjaran = Tahun_Ajaran::find($kelas->tahun_ajaran_id);
-                        return "{$tahunAjaran->tahun_ajaran} {$kelas->nama_kelas}";
-                    })->mapWithKeys(function ($kelas) {
-                        $tahunAjaran = Tahun_Ajaran::find($kelas->tahun_ajaran_id);
-                        return [$kelas->id => "{$kelas->tingkat_kelas} {$kelas->nama_kelas} - {$tahunAjaran->tahun_ajaran}"];
-                    }))
+                    ->options(function (callable $get) {
+                        $tahunAjaran = $get('tahun_ajaran_id');
+                        if ($tahunAjaran) {
+                            return \App\Models\Kelas::where('tahun_ajaran_id', $tahunAjaran)
+                                ->get()
+                                ->mapWithKeys(function ($kelas) {
+                                    return [$kelas->id => $kelas->tingkat_kelas . ' ' . $kelas->nama_kelas];
+                                });   
+                        }
+                        return [];
+                    })
                     ->searchable()
-                    ->live()
-                    ->afterStateUpdated(fn (Set $set, $state) => 
-                        $set('tahun_ajaran_id', Kelas::find($state)->tahun_ajaran_id ?? '')
-                    )
                     ->required(),
-                TextInput::make('tahun_ajaran_id')
-                    ->disabled()
-                    ->dehydrated(false)
-                    ->reactive(),
+                
 
                 Repeater::make('anggota')
                     ->label('Anggota Kelas')
@@ -70,7 +75,7 @@ class AnggotaKelasResource extends Resource
                                     ->get()
                                     ->mapWithKeys(function ($siswa) {
                                         $tahunAjaran = $siswa->anggotaKelas->first()->kelas->tahunAjaran->tahun_ajaran ?? '';
-                                        return [$siswa->nis => "{$siswa->nis} - {$siswa->nama_siswa} - {$tahunAjaran}"];
+                                        return [$siswa->nis => "{$siswa->nis} - {$siswa->nama_siswa} {$tahunAjaran}"];
                                     });
                             })
                             ->searchable()

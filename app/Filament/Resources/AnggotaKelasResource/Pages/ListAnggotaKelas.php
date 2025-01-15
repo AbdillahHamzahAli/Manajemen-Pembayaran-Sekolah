@@ -28,7 +28,6 @@ class ListAnggotaKelas extends Page implements Tables\Contracts\HasTable
         return [
             Action::make('create')
                 ->label('Tambah Anggota Kelas')
-                ->icon('heroicon-o-plus-circle')
                 ->url(route('filament.admin.resources.anggota-kelas.create')),
         ];
     }

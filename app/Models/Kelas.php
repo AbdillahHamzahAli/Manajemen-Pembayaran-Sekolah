@@ -23,4 +23,5 @@ class Kelas extends Model
     {
         return $this->hasMany(Anggota_Kelas::class, 'kelas_id', 'id');
     }
+    
 }

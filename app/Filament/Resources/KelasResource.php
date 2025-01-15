@@ -92,7 +92,7 @@ class KelasResource extends Resource
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
                     ->action(function (Kelas $kelas) {
-                        if ($kelas->siswa()->exists()) {
+                        if ($kelas->anggotaKelas()->exists()) {
                             Notification::make()
                                 ->title('Tidak Dapat Menghapus Data')
                                 ->body('Kelas ini masih memiliki data Siswa.')

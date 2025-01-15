@@ -13,4 +13,9 @@ class SPP extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
     }
+
+    public function transaksiSPP()
+    {
+        return $this->hasMany(Transaksi_SPP::class, 'spp_id', 'id');
+    }
 }

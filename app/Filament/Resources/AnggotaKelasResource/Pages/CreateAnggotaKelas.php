@@ -17,7 +17,7 @@ class CreateAnggotaKelas extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        dd($data);
+        // dd($data);
         $newData = [];
         foreach ($data['anggota'] as $anggota) {
             $newData[] = [
@@ -33,8 +33,12 @@ class CreateAnggotaKelas extends CreateRecord
  
     protected function handleRecordCreation(array $data): Model
     {
-        dd($data);
-        static::getModel()::insert($data);
+        static::getModel()::insert(array_map(function ($item) {
+            return array_merge($item, [
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }, $data));
         return new Anggota_Kelas();
     }
 
