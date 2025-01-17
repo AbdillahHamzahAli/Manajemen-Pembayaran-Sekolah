@@ -33,12 +33,7 @@ class CreateAnggotaKelas extends CreateRecord
  
     protected function handleRecordCreation(array $data): Model
     {
-        static::getModel()::insert(array_map(function ($item) {
-            return array_merge($item, [
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }, $data));
+        static::getModel()::insert($data);
         return new Anggota_Kelas();
     }
 

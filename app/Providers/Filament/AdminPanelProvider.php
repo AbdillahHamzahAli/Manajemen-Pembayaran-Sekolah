@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -41,9 +42,11 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\FilamentInfoWidget::class,
             ])
             ->navigationGroups([
-                'Input Data',
-                'Manajemen Kelas',
-                'Transaksi Bayar',
+                NavigationGroup::make('Input Data'),
+                NavigationGroup::make('Manajemen Kelas'),
+                NavigationGroup::make('Transaksi'),
+                NavigationGroup::make('Laporan')    
+
             ])
             ->middleware([
                 EncryptCookies::class,
