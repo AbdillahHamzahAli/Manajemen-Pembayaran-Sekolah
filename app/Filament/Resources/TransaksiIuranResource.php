@@ -184,11 +184,18 @@ class TransaksiIuranResource extends Resource
                         'Belum Lunas' => 'danger',
                         default => 'warning',
                     })
+                
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('Download PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->label('Download PDF')
+                ->url(fn (Transaksi_Iuran $record): string => route('transaksi-iuran-invoice.pdf', $record->id)),
+            
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

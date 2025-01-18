@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TransaksiSPPResource\Pages;
 
 use App\Filament\Resources\TransaksiSPPResource;
 use App\Models\Transaksi_SPP;
+use Doctrine\DBAL\Schema\Table;
 use Filament\Resources\Pages\Page;
 use Filament\Actions;
 
@@ -53,13 +54,14 @@ class ListTransaksiSPP extends Page implements Tables\Contracts\HasTable
                     'Lunas' => 'success',
                     'Belum Lunas' => 'danger',
                     default => 'warning',
-                })
-                ->sortable(),        
+                }),
+                TextColumn::make('created_at')
+                    ->sortable()
+                    ->hidden()      
             ];
     }
 
-    protected function getDefaultTableSortColumn(): ?string
-    {
+    protected function getDefaultTableSortColumn(): ?string    {
         return 'created_at';
     }
 
@@ -70,6 +72,10 @@ class ListTransaksiSPP extends Page implements Tables\Contracts\HasTable
     protected function getTableActions(): array
     {
         return [
+            Tables\Actions\Action::make('Download PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->label('Download PDF')
+                ->url(fn (Transaksi_SPP $record): string => route('transaksi-spp-invoice.pdf', $record->id)),
             Tables\Actions\DeleteAction::make('delete')
         ];
     }
