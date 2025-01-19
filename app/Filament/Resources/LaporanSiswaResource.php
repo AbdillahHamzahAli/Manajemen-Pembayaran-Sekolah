@@ -32,9 +32,8 @@ class LaporanSiswaResource extends Resource
     {
         return [
             'index' => Pages\ListLaporanSiswa::route('/'),
-            'create' => Pages\CreateLaporanSiswa::route('/create'),
             'view' => Pages\ViewLaporanSiswa::route('/{record}'),
-            'edit' => Pages\EditLaporanSiswa::route('/{record}/edit'),
         ];
     }
+
 }

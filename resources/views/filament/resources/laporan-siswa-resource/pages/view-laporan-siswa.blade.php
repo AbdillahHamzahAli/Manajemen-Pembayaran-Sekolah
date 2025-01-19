@@ -5,6 +5,7 @@
                 <x-filament::input.wrapper class="flex-1">
                     <x-filament::input.select
                         wire:model="tahunAjaran"
+                        wire:change="filter"
                         label="Tahun Pelajaran"                          
                         placeholder="Pilih Tahun Pelajaran"
                     >
@@ -14,17 +15,19 @@
                     </x-filament::input.select>
                 </x-filament::input.wrapper>
                 
-                <div>
+                <div class="flex gap-2">
                     <x-filament::button type="submit">
                         Filter
                     </x-filament::button>
+                    <x-filament::button type="button" color="success">
+                        <a href="{{ route('laporan-siswa.pdf', ['nis' => $siswa->nis, 'id' => $tahunAjaran]) }}" class="">
+                            Download
+                        </a>
+                    </x-filament::button>     
                 </div>
             </div>
         </x-filament::section>
     </form>
-    {{-- {{ $SPP->id ??  'Tidak ada data' }}
-    {{ $TransaksiSPP ?? 'Tidak ada data' }} --}}
-    {{-- {{ $tahunAjaran ? 'Ada data' : 'Tidak ada data' }} --}}
     <x-filament::section>
         <div class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
