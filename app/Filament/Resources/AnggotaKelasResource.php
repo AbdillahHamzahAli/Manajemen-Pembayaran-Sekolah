@@ -42,10 +42,14 @@ class AnggotaKelasResource extends Resource
                 Select::make('tahun_ajaran_id')
                     ->label('Tahun Ajaran')
                     ->options(Tahun_Ajaran::pluck('tahun_ajaran', 'id'))
+                    ->reactive()
                     ->searchable()
                     ->dehydrated()
-                    ->required(),
-
+                    ->required()
+                    ->afterStateUpdated(function (Set $set) {
+                        $set('kelas_id', null);
+                        $set('anggota', []);
+                    }),
 
                 Select::make('kelas_id')
                     ->label('Kelas')
@@ -70,21 +74,29 @@ class AnggotaKelasResource extends Resource
                         Select::make('siswa_nis')
                             ->label('Siswa')
                             ->options(function (callable $get) {
-                                return 
-                                    Siswa::with(['anggotaKelas','anggotaKelas.kelas'])
-                                    ->get()
-                                    ->mapWithKeys(function ($siswa) {
-                                        $tahunAjaran = $siswa->anggotaKelas->first()->kelas->tahunAjaran->tahun_ajaran ?? '';
-                                        return [$siswa->nis => "{$siswa->nis} - {$siswa->nama_siswa} {$tahunAjaran}"];
-                                    });
+                                $tahunAjaran = $get('../../tahun_ajaran_id');                                
+                                if($tahunAjaran){
+                                    return Siswa::whereDoesntHave('anggotaKelas')
+                                        ->orWhereHas('anggotaKelas', function($query) use ($tahunAjaran) {
+                                            $query->whereHas('kelas', function($q) use ($tahunAjaran) {
+                                                $q->where('tahun_ajaran_id', '!=', $tahunAjaran);
+                                            });
+                                        })
+                                        ->get()
+                                        ->mapWithKeys(function ($siswa) {
+                                            return [$siswa->nis => $siswa->nama_siswa];
+                                        });                                
+                                    }
+                                return [];
                             })
                             ->searchable()
                             ->required(),
                     ])
+                    ->default([])
+                    ->reactive()
                     ->columnSpanFull()
                     ->required(),
-            ]);
-    }
+            ]);    }
 
     public static function table(Table $table): Table
     {
