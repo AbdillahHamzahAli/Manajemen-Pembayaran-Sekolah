@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('SPP', function (Blueprint $table) {
-            $table->id();
-            $table->decimal('nominal', 10, 2);
-            $table->foreignId('kelas_id')->constrained('Kelas');
+        Schema::create('siswa', function (Blueprint $table) {
+            $table->char('nis', 10)->primary();
+            $table->string('nama_siswa');
+            $table->enum('jenis_kelamin',['L','P']);
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->date('tanggal_masuk');            
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('SPP');
+        Schema::dropIfExists('siswa');
     }
 };

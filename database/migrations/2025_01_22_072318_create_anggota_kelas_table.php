@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('anggota_kelas', function (Blueprint $table) {
             $table->id();
             $table->char('siswa_nis', 10);
-            $table->foreign('siswa_nis')->references('nis')->on('siswa');
-            $table->foreignId('kelas_id')->constrained('kelas');
+            $table->foreign('siswa_nis')->references('nis')->on('siswa')->onDelete('cascade')->onUpdate('cascade');           
+             $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

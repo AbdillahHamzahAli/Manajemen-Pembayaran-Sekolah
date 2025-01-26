@@ -10,6 +10,9 @@ use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Validation\ValidationException;
+use Filament\Notifications\Notification;
+
 class CreateTransaksiSPP extends CreateRecord
 {
     protected static string $resource = TransaksiSPPResource::class;
@@ -23,6 +26,17 @@ class CreateTransaksiSPP extends CreateRecord
             ->first();
 
         $spp = SPP::where('kelas_id', $data['kelas_id'])->first();        
+        
+        if (!$spp) {
+            Notification::make()
+                ->title('Tidak Dapat Menambah Data')
+                ->body('Data SPP belum ada, Silakan tambah data SPP')
+                ->danger()
+                ->send();
+            throw ValidationException::withMessages([
+                'nominal' => 'Data SPP belum ada',
+            ]);
+        }
 
         $oldTransaksi = Transaksi_SPP::where('anggota_kelas_id', $anggotaKelas->id)
             ->where('bulan', $data['bulan'])

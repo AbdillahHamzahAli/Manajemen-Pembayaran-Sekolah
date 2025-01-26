@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('transaksi_iuran', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('iuran_id')->constrained('iuran');
-            $table->foreignId('anggota_kelas_id')->constrained('anggota_kelas');
             $table->decimal('bayar', 10, 2);
             $table->decimal('tunggakan', 10, 2);
-            $table->enum('status',['Lunas','Belum Lunas']);
+            $table->enum('status', ['Lunas', 'Belum Lunas']);
+            $table->foreignId('anggota_kelas_id')->constrained('anggota_kelas')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('iuran_id')->constrained('iuran')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -96,10 +96,14 @@ class TransaksiSPPResource extends Resource
                     ->required()
                     ->afterStateUpdated(function (callable $set, $state) {
                         if ($state) {
-                            $sppNominal = SPP::where('kelas_id', $state)->value('nominal') ?? 'Data SPP belum ada';
+                            $sppNominal = SPP::where('kelas_id', $state)->value('nominal');
+                            if($sppNominal){
+                                $set('nominal', number_format($sppNominal, 2, ',', '.'));
+                            } else {
+                                $set('nominal', 'Data SPP belum ada');
+                            }
                             $kelasTahunAjaran = Kelas::where('id', $state)->value('tahun_ajaran_id');
                             $tahunAjaran = Tahun_Ajaran::where('id', $kelasTahunAjaran)->value('tahun_ajaran');
-                            $set('nominal', number_format($sppNominal, 2, ',', '.'));
                             $set('tahun_ajaran', $tahunAjaran);
                         }
                     }),
@@ -154,8 +158,9 @@ class TransaksiSPPResource extends Resource
                     ->afterStateUpdated(function (callable $set, $get, $state) {
                         $siswaNis = $get('siswa_nis');
                         $kelasId = $get('kelas_id');
-                        
-                        $transaksi = Transaksi_SPP::with('anggota_kelas')
+
+                        if($kelasId){
+                            $transaksi = Transaksi_SPP::with('anggota_kelas')
                             ->whereHas('anggota_kelas', function ($query) use ($siswaNis, $kelasId) {
                                     $query->where('siswa_nis', $siswaNis)
                                         ->where('kelas_id', $kelasId);
@@ -165,10 +170,17 @@ class TransaksiSPPResource extends Resource
                             ->latest()
                             ->first();
 
-                        if($transaksi) {
-                            $set('nominal',number_format($transaksi->tunggakan, 2, ',', '.'));
-                        } else{
-                            $set('nominal', number_format(SPP::where('kelas_id', $kelasId)->value('nominal'), 2, ',', '.') ?? 'Data SPP belum ada');                        }
+                            if($transaksi) {
+                                $set('nominal',number_format($transaksi->tunggakan, 2, ',', '.'));
+                            } else {
+                                $sppNominal = SPP::where('kelas_id', $state)->value('nominal');
+                                if($sppNominal){
+                                    $set('nominal', number_format($sppNominal, 2, ',', '.'));
+                                } else {
+                                    $set('nominal', 'Data SPP belum ada');
+                                }                      
+                            }        
+                        }
                     })
                     ->required(),
 
@@ -196,7 +208,6 @@ class TransaksiSPPResource extends Resource
             ->columns([
             ])
             ->filters([
-                //
             ])
             ->actions([
             ])

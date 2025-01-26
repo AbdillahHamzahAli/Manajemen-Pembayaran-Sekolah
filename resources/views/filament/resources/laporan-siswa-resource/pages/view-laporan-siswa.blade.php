@@ -15,15 +15,18 @@
                     </x-filament::input.select>
                 </x-filament::input.wrapper>
                 
+                
                 <div class="flex gap-2">
                     <x-filament::button type="submit">
                         Filter
                     </x-filament::button>
-                    <x-filament::button type="button" color="success">
-                        <a href="{{ route('laporan-siswa.pdf', ['nis' => $siswa->nis, 'id' => $tahunAjaran]) }}" class="">
-                            Download
-                        </a>
-                    </x-filament::button>     
+                    @if ($tahunAjaran)
+                        <x-filament::button type="button" color="success">
+                            <a href="{{ route('laporan-siswa.pdf', ['nis' => $siswa->nis, 'id' => $tahunAjaran]) }}" class="">
+                                Download
+                            </a>
+                        </x-filament::button>
+                    @endif     
                 </div>
             </div>
         </x-filament::section>
@@ -124,7 +127,7 @@
             </div>
         </x-filament::section>
     @endif
-    @if($Iuran)
+    @if($Iuran->isNotEmpty())
         <x-filament::section>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

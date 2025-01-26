@@ -43,8 +43,8 @@ class SiswaResource extends Resource
                 TextInput::make('nis')
                     ->label('NIS')
                     ->minLength(10)
-                    ->required(),
-                
+                    ->unique(ignoreRecord: true)
+                    ->required(),                
                 TextInput::make('nama_siswa')
                     ->label('Nama Siswa')
                     ->columnSpan(2)
@@ -85,7 +85,7 @@ class SiswaResource extends Resource
                 TextColumn::make('nis')
                     ->label('NIS')
                     ->searchable(),
-                
+                                    
                 TextColumn::make('nama_siswa')
                     ->label('Nama Siswa')
                     ->searchable(),
@@ -114,7 +114,21 @@ class SiswaResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->requiresConfirmation()
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                if ($record->anggotaKelas()->exists()) {
+                                    Notification::make()
+                                        ->title('Tidak Dapat Menghapus Data')
+                                        ->body('Siswa ini masih terdaftar sebagai anggota kelas.')
+                                        ->danger()
+                                        ->send();
+                                    return;
+                                }
+                                $record->delete();
+                        }
+                    }),
                 ]),
             ]);
     }

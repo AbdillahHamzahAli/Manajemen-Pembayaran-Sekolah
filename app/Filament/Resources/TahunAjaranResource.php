@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Collection;
+// use Filament\Notifications\Collection;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 
@@ -77,7 +77,7 @@ class TahunAjaranResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->requiresConfirmation()
-                        ->action(function (Collection $records) {
+                        ->action(function ($records) {
                                 foreach ($records as $record) {
                                     if ($record->kelas()->exists()) {
                                         Notification::make()
@@ -89,8 +89,8 @@ class TahunAjaranResource extends Resource
                                     }
                                     $record->delete();
                             }
-                        }),    
-                ]),
+                        }),                    
+                    ]),
             ]);
     }
 

@@ -75,19 +75,19 @@ class AnggotaKelasResource extends Resource
                             ->label('Siswa')
                             ->options(function (callable $get) {
                                 $tahunAjaran = $get('../../tahun_ajaran_id');                                
-                                if($tahunAjaran){
-                                    return Siswa::whereDoesntHave('anggotaKelas')
-                                        ->orWhereHas('anggotaKelas', function($query) use ($tahunAjaran) {
-                                            $query->whereHas('kelas', function($q) use ($tahunAjaran) {
-                                                $q->where('tahun_ajaran_id', '!=', $tahunAjaran);
+                                if ($tahunAjaran) {
+                                    $siswa = Siswa::query()
+                                        ->whereDoesntHave('anggotaKelas', function ($query) use ($tahunAjaran) {
+                                            $query->whereHas('kelas', function ($q) use ($tahunAjaran) {
+                                                $q->where('tahun_ajaran_id', $tahunAjaran);
                                             });
-                                        })
-                                        ->get()
-                                        ->mapWithKeys(function ($siswa) {
-                                            return [$siswa->nis => $siswa->nama_siswa];
-                                        });                                
-                                    }
-                                return [];
+                                        })->get();
+                                    
+                                    return $siswa->mapWithKeys(function ($siswa) {
+                                        return [$siswa->nis => $siswa->nama_siswa];
+                                    });
+                                }
+                                return [];                            
                             })
                             ->searchable()
                             ->required(),

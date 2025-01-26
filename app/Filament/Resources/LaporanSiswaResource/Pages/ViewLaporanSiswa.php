@@ -29,7 +29,7 @@ class ViewLaporanSiswa extends Page
     public $tahunAjaran;
 
     public ?SPP $SPP = null;
-    public $Iuran;
+    public $Iuran = null;
     public $TransaksiSPP;
     public $TransaksiIuran;
 

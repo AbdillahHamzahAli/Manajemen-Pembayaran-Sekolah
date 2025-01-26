@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('siswa', function (Blueprint $table) {
-            $table->dropForeign(['kelas_id']);
-            $table->dropColumn('kelas_id');
+        Schema::create('spp', function (Blueprint $table) {
+            $table->id();
+            $table->decimal('nominal', 10, 2);
+            $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade')->onUpdate('cascade');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('siswa', function (Blueprint $table) {
-            $table->foreignId('kelas_id')->constrained('kelas');
-        });
+        Schema::dropIfExists('spp');
     }
 };

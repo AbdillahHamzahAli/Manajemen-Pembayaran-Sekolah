@@ -217,7 +217,6 @@ class TransaksiIuranResource extends Resource
         return [
             'index' => Pages\ListTransaksiIurans::route('/'),
             'create' => Pages\CreateTransaksiIuran::route('/create'),
-            'edit' => Pages\EditTransaksiIuran::route('/{record}/edit'),
         ];
     }
 }
